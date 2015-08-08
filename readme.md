@@ -2,7 +2,7 @@
 
 Create a tcp server and wait for temperature logger to connect.
 
-This script expects values from a ds18b20 sensor. The reported value is multiplied by 0.0625 (12bit acuracy on the sensor) and stored in and rrd db.
+This script expects values from a ds18b20 sensor. The reported value is multiplied by 0.0625 (12bit acuracy on the sensor) and stored in a rrd db.
 
 Graphs with multiple timeframes will be created.
 
