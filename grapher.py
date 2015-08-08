@@ -11,7 +11,7 @@ def makegraphs():
     rrdpath = os.path.dirname(os.path.realpath(__file__)) + '/temperature.rrd'
 
     gmake1h(rrdpath)
-    gmake2h(rrdpath)
+    gmake8h(rrdpath)
     gmake1d(rrdpath)
     gmake7d(rrdpath)
 
@@ -37,14 +37,14 @@ def gmake1h(rrd):
 
 
 # last 2 hours
-def gmake2h(rrd):
-    rrdtool.graph(imgpath + 'temp2h.png',
+def gmake8h(rrd):
+    rrdtool.graph(imgpath + 'temp8h.png',
             '--imgformat', 'PNG',
             '--width',  '720',
             '--height', '210',
-            '--start', '-2h',
+            '--start', '-8h',
             '--vertical-label', 'Temperature (°C)',
-            '--title', 'Temperature last 2 hour(s)',
+            '--title', 'Temperature last 8 hour(s)',
             '-A',
             '--alt-y-grid',
             'DEF:temp=' + rrd + ':a:AVERAGE',
