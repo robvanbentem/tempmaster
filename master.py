@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
 import rrdtool
 import SocketServer
 import time
 import grapher
 
-rrdpath = '/home/elec/temperature.rrd';
+rrdpath = os.path.dirname(os.path.realpath(__file__)) + '/temperature.rrd'
 
 class MasterTCPHandler(SocketServer.BaseRequestHandler):
     def handle(self):
@@ -18,7 +19,7 @@ class MasterTCPHandler(SocketServer.BaseRequestHandler):
 
             if 10 <= ftemp <= 40:
                 stemp = "%f" % (ftemp)
-            
+
                 # update rrd and create graphs
                 rrdtool.update(rrdpath, 'N:' + stemp)
                 grapher.makegraphs()
