@@ -11,11 +11,18 @@ Graphs with multiple timeframes will be created.
 
 Use this command to create a rrd:
 
-`rrdtool create temperature.rrd 
-    --start now --step 60 
-    DS:a:GAUGE:120:-50:50 
-    RRA:AVERAGE:0.5:1:12 
-    RRA:AVERAGE:0.5:1:288 
-    RRA:AVERAGE:0.5:12:168 
-    RRA:AVERAGE:0.5:12:720 
-    RRA:AVERAGE:0.5:288:365`
+    rrdtool create temperature.rrd \
+        --start now --step 1m \
+        DS:a:GAUGE:120:0:50 \
+        RRA:AVERAGE:0.5:1m:1440 \
+        RRA:MIN:0.5:1m:1440 \
+        RRA:MAX:0.5:1m:1440 \
+        RRA:AVERAGE:0.5:5m:2016 \
+        RRA:MIN:0.5:5m:2016 \
+        RRA:MAX:0.5:5m:2016 \
+        RRA:AVERAGE:0.5:30m:1440 \
+        RRA:MIN:0.5:30m:1440 \
+        RRA:MAX:0.5:30m:1440 \
+        RRA:AVERAGE:0.5:4h:2190 \
+        RRA:MIN:0.5:4h:2190 \
+        RRA:MAX:0.5:4h:2190
