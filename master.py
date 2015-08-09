@@ -18,6 +18,7 @@ class MasterTCPHandler(SocketServer.BaseRequestHandler):
 
             if 10 <= ftemp <= 40:
                 stemp = "%f" % (ftemp)
+                print "new report: %s" % (stemp)
 
                 # update rrd
                 rrdtool.update(rrdpath, 'N:' + stemp)
