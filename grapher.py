@@ -13,18 +13,18 @@ def makegraphs():
 
     # define the graphs we want
     graphs = [
-        ['1h', 'last 1 hour'],
-        ['8h', 'last 8 hours'],
-        ['1d', 'last 1 day'],
-        ['7d', 'last 7 days'],
-    ];
+        ['1h', '60', 'last 1 hour', []],
+        ['8h', '480', 'last 8 hours', []],
+        ['1d', '1440', 'last 1 day', []],
+        ['7d', '10080', 'last 7 days', []]
+    ]
 
     for opts in graphs:
-        gmake(rrdpath, opts[0], opts[1])
+        gmake(rrdpath, tspan=opts[0], step=opts[1], title=opts[2], extra=opts[3], smooth=False)
 
 
 # make graph
-def gmake(rrd, tspan, title):
+def gmake(rrd, tspan, step='300', title='', smooth=False, extra=[]):
     rrdtool.graph(imgpath + 'temp' + tspan +'.png',
             '--imgformat', 'PNG',
             '--width',  '720',
@@ -33,17 +33,18 @@ def gmake(rrd, tspan, title):
             '--vertical-label', 'Temperature (°C)',
             '--title', 'Temperature ' + title,
             '-A',
+            '-S', step,
+            ('-E' if smooth else []),
             '--alt-y-grid',
-            'DEF:tempa=' + rrd + ':a:AVERAGE',
-            'DEF:tempb=' + rrd + ':a:MIN',
-            'DEF:tempc=' + rrd + ':a:MAX',
-            'LINE2:tempa#2C3E50:Avg',
-            'LINE2:tempb#3498DB:Min',
-            'LINE2:tempc#E74C3C:Max',
-            'GPRINT:tempa:LAST:Last\: %2.2lf °C',
-            'GPRINT:tempb:MIN:Min\: %2.2lf °C',
-            'GPRINT:tempc:MAX:Max\: %2.2lf °C',
-            'GPRINT:tempa:AVERAGE:Avg\: %2.2lf °C',
+            'DEF:avg=' + rrd + ':a:AVERAGE',
+            'DEF:min=' + rrd + ':a:MIN',
+            'DEF:max=' + rrd + ':a:MAX',
+            'LINE2:avg#2C3E50:DS18B20 Sensor',
+            'GPRINT:avg:LAST:Current\: %2.2lf °C',
+            'GPRINT:min:MIN:Min\: %2.2lf °C',
+            'GPRINT:max:MAX:Max\: %2.2lf °C',
+            'GPRINT:avg:AVERAGE:Avg\: %2.2lf °C\l',
+            extra,
             )
 
 
