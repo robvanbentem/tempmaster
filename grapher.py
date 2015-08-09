@@ -10,88 +10,40 @@ def makegraphs():
 
     rrdpath = os.path.dirname(os.path.realpath(__file__)) + '/temperature.rrd'
 
-    gmake1h(rrdpath)
-    gmake8h(rrdpath)
-    gmake1d(rrdpath)
-    gmake7d(rrdpath)
+
+    # define the graphs we want
+    graphs = [
+        ['1h', 'last 1 hour'],
+        ['8h', 'last 8 hours'],
+        ['1d', 'last 1 day'],
+        ['7d', 'last 7 days'],
+    ];
+
+    for opts in graphs:
+        gmake(rrdpath, opts[0], opts[1])
 
 
-# last hour
-def gmake1h(rrd):
-    rrdtool.graph(imgpath + 'temp1h.png',
+# make graph
+def gmake(rrd, tspan, title):
+    rrdtool.graph(imgpath + 'temp' + tspan +'.png',
             '--imgformat', 'PNG',
             '--width',  '720',
             '--height', '210',
-            '--start', '-1h',
+            '--start', '-' + tspan,
             '--vertical-label', 'Temperature (°C)',
-            '--title', 'Temperature last 1 hour(s)',
+            '--title', 'Temperature ' + title,
             '-A',
             '--alt-y-grid',
-            'DEF:temp=' + rrd + ':a:AVERAGE',
-            'LINE2:temp#FFAAAA:Temperature',
-            'GPRINT:temp:LAST:Last\: %2.2lf °C',
-            'GPRINT:temp:MIN:Min\: %2.2lf °C',
-            'GPRINT:temp:MAX:Max\: %2.2lf °C',
-            'GPRINT:temp:AVERAGE:Avg\: %2.2lf °C',
-            )
-
-
-# last 2 hours
-def gmake8h(rrd):
-    rrdtool.graph(imgpath + 'temp8h.png',
-            '--imgformat', 'PNG',
-            '--width',  '720',
-            '--height', '210',
-            '--start', '-8h',
-            '--vertical-label', 'Temperature (°C)',
-            '--title', 'Temperature last 8 hour(s)',
-            '-A',
-            '--alt-y-grid',
-            'DEF:temp=' + rrd + ':a:AVERAGE',
-            'LINE2:temp#FFAAAA:Temperature',
-            'GPRINT:temp:LAST:Last\: %2.2lf °C',
-            'GPRINT:temp:MIN:Min\: %2.2lf °C',
-            'GPRINT:temp:MAX:Max\: %2.2lf °C',
-            'GPRINT:temp:AVERAGE:Avg\: %2.2lf °C',
-            )
-
-# last 1 day
-def gmake1d(rrd):
-    rrdtool.graph(imgpath + 'temp1d.png',
-            '--imgformat', 'PNG',
-            '--width',  '720',
-            '--height', '210',
-            '--start', '-1d',
-            '--vertical-label', 'Temperature (°C)',
-            '--title', 'Temperature last 1 day(s)',
-            '-A',
-            '--alt-y-grid',
-            'DEF:temp=' + rrd + ':a:AVERAGE',
-            'LINE2:temp#FFAAAA:Temperature',
-            'GPRINT:temp:LAST:Last\: %2.2lf °C',
-            'GPRINT:temp:MIN:Min\: %2.2lf °C',
-            'GPRINT:temp:MAX:Max\: %2.2lf °C',
-            'GPRINT:temp:AVERAGE:Avg\: %2.2lf °C',
-            )
-
-
-# last 7 days
-def gmake7d(rrd):
-    rrdtool.graph(imgpath + 'temp7d.png',
-            '--imgformat', 'PNG',
-            '--width',  '720',
-            '--height', '210',
-            '--start', '-7d',
-            '--vertical-label', 'Temperature (°C)',
-            '--title', 'Temperature last 7 day(s)',
-            '-A',
-            '--alt-y-grid',
-            'DEF:temp=' + rrd + ':a:AVERAGE',
-            'LINE2:temp#FFAAAA:Temperature',
-            'GPRINT:temp:LAST:Last\: %2.2lf °C',
-            'GPRINT:temp:MIN:Min\: %2.2lf °C',
-            'GPRINT:temp:MAX:Max\: %2.2lf °C',
-            'GPRINT:temp:AVERAGE:Avg\: %2.2lf °C',
+            'DEF:tempa=' + rrd + ':a:AVERAGE',
+            'DEF:tempb=' + rrd + ':a:MIN',
+            'DEF:tempc=' + rrd + ':a:MAX',
+            'LINE2:tempa#2C3E50:Avg',
+            'LINE2:tempb#3498DB:Min',
+            'LINE2:tempc#E74C3C:Max',
+            'GPRINT:tempa:LAST:Last\: %2.2lf °C',
+            'GPRINT:tempb:MIN:Min\: %2.2lf °C',
+            'GPRINT:tempc:MAX:Max\: %2.2lf °C',
+            'GPRINT:tempa:AVERAGE:Avg\: %2.2lf °C',
             )
 
 
