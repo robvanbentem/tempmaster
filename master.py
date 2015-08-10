@@ -1,35 +1,32 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os
+import os, sys
 import rrdtool
-import SocketServer
 import time
+import cherrypy
 
-rrdpath = os.path.dirname(os.path.realpath(__file__)) + '/temperature.rrd'
 
-class MasterTCPHandler(SocketServer.BaseRequestHandler):
-    def handle(self):
+class Master(object):
+
+    def __init__(self, rrdpath):
+        self.rrdpath = rrdpath
+
+    def handle(self, device, attribute, value):
+
         try:
-            # collect and parse data
-            self.data = self.request.recv(1024)
-
-            ftemp = int(str(self.data).encode('hex'), 16) * 0.0625
+            ftemp = int(value) * 0.0625
 
             if 10 <= ftemp <= 40:
                 stemp = "%f" % (ftemp)
-                print "new report: %s" % (stemp)
+
+                cherrypy.log("%s reported %s:%s" %(device, attribute, stemp))
 
                 # update rrd
-                rrdtool.update(rrdpath, 'N:' + stemp)
+                rrdtool.update(self.rrdpath, 'N:' + stemp)
+
+                return "ACK"
 
         except:
-            print 'error..'
-
-
-
-if __name__ == "__main__":
-    HOST, PORT = "192.168.1.1", 4444
-    server = SocketServer.TCPServer((HOST, PORT), MasterTCPHandler)
-    server.serve_forever()
-
+            cherrypy.log("error! [%s]" % sys.exc_info()[0])
+            return "NACK"
