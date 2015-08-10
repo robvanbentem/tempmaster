@@ -13,7 +13,7 @@ def makegraphs():
 
     # define the graphs we want
     graphs = [
-        ['1h', '120', 'last 1 hour', []],
+        ['1h', '1', 'last 1 hour', []],
         ['8h', '600', 'last 8 hours', []],
         ['1d', '1800', 'last 1 day', []],
         ['7d', '3600', 'last 7 days', []]
