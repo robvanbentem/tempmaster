@@ -8,7 +8,7 @@ imgpath = os.path.dirname(os.path.realpath(__file__)) + '/public/'
 
 def makegraphs():
 
-    rrdpath = os.path.dirname(os.path.realpath(__file__)) + '/temperature.rrd'
+    rrdpath = os.path.dirname(os.path.realpath(__file__)) + '/'
 
 
     # define the graphs we want
@@ -35,14 +35,23 @@ def gmake(rrd, tspan, step='300', title='', extra=[]):
             '-A',
             '-S', step,
             '--alt-y-grid',
-            'DEF:avg=' + rrd + ':a:AVERAGE',
-            'DEF:min=' + rrd + ':a:MIN',
-            'DEF:max=' + rrd + ':a:MAX',
-            'LINE2:avg#2C3E50:DS18B20 Sensor',
-            'GPRINT:avg:LAST:Current\: %2.2lf °C',
-            'GPRINT:min:MIN:Min\: %2.2lf °C',
-            'GPRINT:max:MAX:Max\: %2.2lf °C',
-            'GPRINT:avg:AVERAGE:Avg\: %2.2lf °C\l',
+            'DEF:aavg=' + rrd + 'poc1.rrd:a:AVERAGE',
+            'DEF:amin=' + rrd + 'poc1.rrd:a:MIN',
+            'DEF:amax=' + rrd + 'poc1.rrd:a:MAX',
+            'DEF:bavg=' + rrd + 'poc2.rrd:a:AVERAGE',
+            'DEF:bmin=' + rrd + 'poc2.rrd:a:MIN',
+            'DEF:bmax=' + rrd + 'poc2.rrd:a:MAX',
+            'LINE2:aavg#E74C3C:Livingroom',
+            'GPRINT:aavg:LAST:Current\: %2.2lf °C',
+            'GPRINT:amin:MIN:Min\: %2.2lf °C',
+            'GPRINT:amax:MAX:Max\: %2.2lf °C',
+            'GPRINT:aavg:AVERAGE:Avg\: %2.2lf °C\l',
+            'LINE2:bavg#2980B9:Bathroom  ',
+            'GPRINT:bavg:LAST:Current\: %2.2lf °C',
+            'GPRINT:bmin:MIN:Min\: %2.2lf °C',
+            'GPRINT:bmax:MAX:Max\: %2.2lf °C',
+            'GPRINT:bavg:AVERAGE:Avg\: %2.2lf °C\l',
+
             extra,
             )
 

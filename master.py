@@ -23,7 +23,7 @@ class Master(object):
                 cherrypy.log("%s reported %s:%s" %(device, attribute, stemp))
 
                 # update rrd
-                rrdtool.update(self.rrdpath, '-t', str(attribute), 'N:%s' % stemp)
+                rrdtool.update(self.rrdpath + str(device) + '.rrd', '-t', str(attribute), 'N:' + stemp)
 
                 return "ACK"
 
