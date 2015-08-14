@@ -20,7 +20,7 @@ class Master(object):
             if 10 <= ftemp <= 40:
                 stemp = "%f" % (ftemp)
 
-                cherrypy.log("%s reported %s:%s" %(device, attribute, stemp))
+                cherrypy.log("%s %s: %s" %(device, attribute, stemp))
 
                 # update rrd
                 rrdtool.update(self.rrdpath + str(device) + '.rrd', '-t', str(attribute), 'N:' + stemp)

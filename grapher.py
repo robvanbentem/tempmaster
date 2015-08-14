@@ -13,10 +13,10 @@ def makegraphs():
 
     # define the graphs we want
     graphs = [
-        ['1h', '1', 'last 1 hour', []],
+        ['1h', '60', 'last 1 hour', []],
         ['8h', '600', 'last 8 hours', []],
-        ['1d', '1800', 'last 1 day', []],
-        ['7d', '3600', 'last 7 days', []]
+        ['1d', '900', 'last 1 day', []],
+        ['7d', '4500', 'last 7 days', []]
     ]
 
     for opts in graphs:
@@ -33,24 +33,29 @@ def gmake(rrd, tspan, step='300', title='', extra=[]):
             '--vertical-label', 'Temperature (°C)',
             '--title', 'Temperature ' + title,
             '-A',
-            '-S', step,
             '--alt-y-grid',
+            '-S', step,
+            '-N',
             'DEF:aavg=' + rrd + 'poc1.rrd:a:AVERAGE',
             'DEF:amin=' + rrd + 'poc1.rrd:a:MIN',
             'DEF:amax=' + rrd + 'poc1.rrd:a:MAX',
             'DEF:bavg=' + rrd + 'poc2.rrd:a:AVERAGE',
             'DEF:bmin=' + rrd + 'poc2.rrd:a:MIN',
             'DEF:bmax=' + rrd + 'poc2.rrd:a:MAX',
-            'LINE2:aavg#E74C3C:Livingroom',
+            'LINE1:aavg#E74C3C:Livingroom',
             'GPRINT:aavg:LAST:Current\: %2.2lf °C',
             'GPRINT:amin:MIN:Min\: %2.2lf °C',
             'GPRINT:amax:MAX:Max\: %2.2lf °C',
             'GPRINT:aavg:AVERAGE:Avg\: %2.2lf °C\l',
-            'LINE2:bavg#2980B9:Bathroom  ',
+            'LINE1:bavg#2980B9:Bedroom   ',
             'GPRINT:bavg:LAST:Current\: %2.2lf °C',
             'GPRINT:bmin:MIN:Min\: %2.2lf °C',
             'GPRINT:bmax:MAX:Max\: %2.2lf °C',
             'GPRINT:bavg:AVERAGE:Avg\: %2.2lf °C\l',
+#            'LINE1:amax#E74C3C',
+#            'LINE1:amin#E74C3C',
+#            'LINE1:bmax#2980B9',
+#            'LINE1:bmin#2980B9',
 
             extra,
             )
