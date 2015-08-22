@@ -13,42 +13,44 @@ def makegraphs():
 
     # define the graphs we want
     graphs = [
-        ['1h', '60', 'last 1 hour', []],
-        ['8h', '600', 'last 8 hours', []],
-        ['1d', '900', 'last 1 day', []],
-        ['7d', '4500', 'last 7 days', []]
+        ['1h', '60', 'past 1 hour', '1', []],
+        ['8h', '600', 'past 8 hours', '1', []],
+        ['1d', '900', 'past day', '1', []],
+        ['7d', '4500', 'past week', '1', []],
+        ['1m', '9000', 'past month', '1', []],
+        ['3m', '21000', 'past 3 months', '1', []],
     ]
 
     for opts in graphs:
-        gmake(rrdpath, tspan=opts[0], step=opts[1], title=opts[2], extra=opts[3])
+        gmake(rrdpath, tspan=opts[0], step=opts[1], title=opts[2], extra=opts[4], lw=opts[3])
 
 
 # make graph
-def gmake(rrd, tspan, step='300', title='', extra=[]):
+def gmake(rrd, tspan, step='300', title='', extra=[], lw='1'):
     rrdtool.graph(imgpath + 'temp' + tspan +'.png',
             '--imgformat', 'PNG',
-            '--width',  '720',
-            '--height', '210',
+            '--width',  '540',
+            '--height', '180',
             '--start', '-' + tspan,
             '--vertical-label', 'Temperature (°C)',
             '--title', 'Temperature ' + title,
             '-A',
             '--alt-y-grid',
             '-S', step,
-            '-N',
+            '-E',
             'DEF:aavg=' + rrd + 'poc1.rrd:a:AVERAGE',
             'DEF:amin=' + rrd + 'poc1.rrd:a:MIN',
             'DEF:amax=' + rrd + 'poc1.rrd:a:MAX',
             'DEF:bavg=' + rrd + 'poc2.rrd:a:AVERAGE',
             'DEF:bmin=' + rrd + 'poc2.rrd:a:MIN',
             'DEF:bmax=' + rrd + 'poc2.rrd:a:MAX',
-            'LINE1:aavg#E74C3C:Livingroom',
-            'GPRINT:aavg:LAST:Current\: %2.2lf °C',
+            'LINE' + lw + ':aavg#E74C3C:Livingroom',
+            'GPRINT:amin:LAST:Current\: %2.2lf °C',
             'GPRINT:amin:MIN:Min\: %2.2lf °C',
             'GPRINT:amax:MAX:Max\: %2.2lf °C',
             'GPRINT:aavg:AVERAGE:Avg\: %2.2lf °C\l',
-            'LINE1:bavg#2980B9:Bedroom   ',
-            'GPRINT:bavg:LAST:Current\: %2.2lf °C',
+            'LINE' + lw +':bavg#2980B9:Bedroom   ',
+            'GPRINT:bmin:LAST:Current\: %2.2lf °C',
             'GPRINT:bmin:MIN:Min\: %2.2lf °C',
             'GPRINT:bmax:MAX:Max\: %2.2lf °C',
             'GPRINT:bavg:AVERAGE:Avg\: %2.2lf °C\l',
