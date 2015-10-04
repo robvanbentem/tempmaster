@@ -12,7 +12,19 @@ class Master(object):
     def __init__(self, rrdpath):
         self.rrdpath = rrdpath
 
-    def handle(self, device, attribute, value):
+    def esp(self, temp, hum):
+
+        try:
+            cherrypy.log("temp: %s; hum: %s" %(temp, hum))
+            rrdtool.update(self.rrdpath + 'esp.rrd', 'N:' + str(temp) + ':' + str(hum))
+            return "ACK"
+
+        except:
+            cherrypy.log("error! [%s]" % sys.exc_info()[0])
+            return "NACK"
+
+
+    def pic(self, device, attribute, value):
 
         try:
             ftemp = int(value) * 0.0625

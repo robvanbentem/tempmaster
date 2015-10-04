@@ -15,7 +15,11 @@ class MasterApp(object):
 
     @cherrypy.expose
     def log(self, d, a, v):
-        return self.master.handle(d, a, v)
+        return self.master.pic(d, a, v)
+
+    @cherrypy.expose
+    def esp(self, temp, hum):
+        return self.master.esp(temp, hum)
         
     
 cherrypy.config.update("app.conf")
